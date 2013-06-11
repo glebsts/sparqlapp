@@ -1,0 +1,92 @@
+#{extends 'main.html' /}
+#{set title:'Building data for '+buildingId /}
+<span style="font-size:75%;"><a href="@{Application.index}">Start new search</a></span>
+<table border="1">
+  <caption>Building data for <a href="@{Application.searchByLink}?addressLink=${result.subjectUri.urlEncode()}">${result.id}</a></caption>
+  <tr>
+    *{ #{list items:result.headers, as:'colname'}
+    	<th>${colname}</th>
+    #{/list}}*
+    *{   
+		 <th>Subject</th>
+		    <th>Predicate</th>
+		    <th>Object</th>
+		</tr>
+		 #{list items:result.triplets, as:'triplet' }
+		    <tr>
+		        <td>${triplet.subject}</td><td>${triplet.predicate}</td><td>${triplet.object}</td>
+		    </tr>
+		    #{/list}
+	}* 
+    
+    <tr>
+	    <td>Address</td>
+	    <td>${adsTextAddress.escapeHtml()}</td>
+    </tr>
+    <tr>
+    	<td>Created</td>
+    	<td>${creationDate}</td>
+    </tr>
+    <tr>
+    	<td>EHRK</td>
+    	<td>${ehrCode}</td>
+    </tr>
+    <tr>
+	    <td>Building registry code</td>
+	    <td>${ehrRegistryCode}</td>
+    </tr>
+    <tr>
+	    <td>Used as</td>
+	    <td>${usageText}</td>
+    </tr>
+</table>
+ 
+Useful links about this building:
+<ul>
+	#{list links.keySet(), as:'link'}
+	<li><a href="${links.get(link)}" target="_blank">${link}</a></li>
+	#{/list}
+	#{else}
+	Sorry, no links about this building..
+	#{/else}
+</ul>
+ 
+<div style="float:left;">  
+Neigbours:
+<ul>
+	#{list items:neighbours, as:'neighbour'}
+	<li><a href="@{Application.searchByLink}?addressLink=${neighbour.triplets.get(0).subject.urlEncode()}">${neighbour.triplets.get(0).object}</a></li>
+	#{/list}
+</ul>
+</div>
+<div style="float:left;">
+Map:
+
+   <div id="map_canvas" style="width:400px; height:250px"></div>
+    
+   <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+   <script type="text/javascript">
+	function initialize() {
+		var latlng = new google.maps.LatLng(${adsLongitude}, ${adsLatitude});
+		var settings = {
+			zoom: 15,
+			center: latlng,
+			mapTypeControl: true,
+			mapTypeControlOptions: {style: google.maps.MapTypeControlStyle.DROPDOWN_MENU},
+			navigationControl: true,
+			navigationControlOptions: {style: google.maps.NavigationControlStyle.SMALL},
+			mapTypeId: google.maps.MapTypeId.ROADMAP
+        };
+        var map = new google.maps.Map(document.getElementById("map_canvas"), settings);
+        
+        var markerPos = new google.maps.LatLng( ${adsLongitude}, ${adsLatitude});
+		  var marker = new google.maps.Marker({
+		      position: markerPos,
+		      map: map,
+		      title: '${adsTextAddress.escapeHtml()}'
+		  });
+    }
+    initialize();
+    </script> 
+</div>
+<div style="clear:both;"></div>

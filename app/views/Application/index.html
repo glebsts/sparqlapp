@@ -1,0 +1,7 @@
+#{extends 'main.html' /}
+#{set title:'Search building' /}
+<form method="GET" action="@{Application.search}">
+<label for="building_id">Building identificator must be used here (i.e. 2701012)</label>
+<input type="text" value="" name="id" id="building_id" />
+<input type="submit" value="search" />
+</form>
