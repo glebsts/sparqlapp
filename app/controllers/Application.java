@@ -95,7 +95,12 @@ public class Application extends Controller {
 
 	}
 
+	/**
+	 * method making all the stuff and rendering template
+	 * @param id
+	 */
 	public static void search(String id) {
+		// if id for search is defined, look for info
 		if (id != null) {
 			renderArgs.put("buildingId", id);
 			// get initial data
@@ -195,7 +200,9 @@ public class Application extends Controller {
 
 			renderArgs.put("result", building);
 			render();
-		} else {
+		} 
+		// otherwise display searchform
+		else {
 			index();
 		}
 	}
@@ -332,6 +339,13 @@ public class Application extends Controller {
 		return result;
 	}
 
+	/**
+	 * deserializes string from RDF node
+	 * @param rBind
+	 * @param varName
+	 * @param context
+	 * @return
+	 */
 	protected static String getVarValueAsString(QuerySolution rBind,
 			String varName, SerializationContext context) {
 		RDFNode obj = rBind.get(varName);
@@ -345,7 +359,7 @@ public class Application extends Controller {
 	/***
 	 * clean datatype markup for coordinates
 	 * @param val
-	 * @return
+	 * @return double without metadata formatting
 	 */
 	protected static String cleanDouble(String val) {
 		return val.substring(1, 15);
